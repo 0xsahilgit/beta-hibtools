@@ -1,0 +1,7 @@
+streamlit==1.45.1
+pandas==2.2.3
+requests==2.32.3
+pybaseball==2.1.0
+beautifulsoup4==4.12.3
+Pillow==10.4.0
+matplotlib==3.10.3
