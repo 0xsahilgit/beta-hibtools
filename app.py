@@ -186,15 +186,9 @@ hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6r
 .auth-wrap { min-height:57vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-top:2rem; }
 .auth-ball-stage { width:108px; height:108px; display:grid; place-items:center; margin:0 auto 1.55rem; perspective:700px; position:relative; isolation:isolate; }
 .auth-ball-stage::before { content:""; position:absolute; width:86px; height:86px; border-radius:50%; z-index:-1; background:radial-gradient(circle, rgba(102,157,255,.20) 0%, rgba(72,124,220,.10) 42%, rgba(72,124,220,0) 72%); filter:blur(10px); animation:ballGlow 4.6s ease-in-out infinite; }
-.auth-baseball { width:78px; height:78px; display:block; filter:drop-shadow(0 16px 22px rgba(0,0,0,.45)) drop-shadow(0 0 7px rgba(110,164,255,.12)); animation:spinball 12s linear infinite; transform-style:preserve-3d; }
+.auth-baseball { width:78px; height:78px; display:block; filter:drop-shadow(0 16px 22px rgba(0,0,0,.45)) drop-shadow(0 0 7px rgba(110,164,255,.12)); animation:spinball 4.2s linear infinite; transform-style:preserve-3d; }
 @keyframes ballGlow { 0%,100%{ transform:scale(.94); opacity:.60 } 50%{ transform:scale(1.10); opacity:1 } }
-@keyframes spinball {
-    0%   { transform:rotateY(0deg) rotateZ(-4deg); }
-    25%  { transform:rotateY(90deg) rotateZ(0deg); }
-    50%  { transform:rotateY(180deg) rotateZ(4deg); }
-    75%  { transform:rotateY(270deg) rotateZ(0deg); }
-    100% { transform:rotateY(360deg) rotateZ(-4deg); }
-}
+@keyframes spinball { 0%{transform:rotateY(0deg) rotateZ(-5deg)} 50%{transform:rotateY(180deg) rotateZ(5deg)} 100%{transform:rotateY(360deg) rotateZ(-5deg)} }
 .auth-eyebrow { color:var(--accent); font:600 .67rem/1.2 'JetBrains Mono',monospace; letter-spacing:.16em; text-transform:uppercase; }
 .auth-title { margin-top:.55rem; font-size:2rem; font-weight:680; letter-spacing:-.045em; }
 .auth-copy { color:var(--muted); font-size:.86rem; margin:.45rem auto 1.55rem; max-width:340px; line-height:1.55; }
@@ -211,42 +205,31 @@ hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6r
 
 
 def baseball_svg(css_class="", aria_label="Baseball"):
-    """Inline classic baseball SVG: clean white ball, two standard red seam arcs, and even stitches."""
+    """Inline baseball SVG with realistic opposing seam arcs and angled stitches."""
     cls = f' class="{css_class}"' if css_class else ""
-    return f"""<svg{cls} viewBox="0 0 120 120" role="img" aria-label="{aria_label}" xmlns="http://www.w3.org/2000/svg">
+    return f"""<svg{cls} viewBox="0 0 100 100" role="img" aria-label="{aria_label}" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="ballShade" cx="34%" cy="28%" r="76%">
+        <radialGradient id="ballShade" cx="31%" cy="24%" r="78%">
           <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="62%" stop-color="#f7f4ed"/>
-          <stop offset="100%" stop-color="#d8d1c5"/>
+          <stop offset="56%" stop-color="#f4f1e9"/>
+          <stop offset="100%" stop-color="#d1cbc0"/>
         </radialGradient>
-        <filter id="ballInner" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#000000" flood-opacity=".16"/>
-        </filter>
-        <clipPath id="ballClip"><circle cx="60" cy="60" r="54"/></clipPath>
+        <clipPath id="ballClip"><circle cx="50" cy="50" r="46"/></clipPath>
       </defs>
-
-      <circle cx="60" cy="60" r="54" fill="url(#ballShade)" filter="url(#ballInner)"/>
-      <circle cx="60" cy="60" r="53.5" fill="none" stroke="#ffffff" stroke-opacity=".58" stroke-width="1"/>
-
-      <g clip-path="url(#ballClip)" fill="none" stroke="#b8232f" stroke-linecap="round" stroke-linejoin="round">
-        <!-- Standard front-facing baseball seams: two clean opposing arcs. -->
-        <path d="M22 8 C43 27 45 49 38 68 C33 82 34 98 46 114" stroke-width="2.45"/>
-        <path d="M98 8 C77 27 75 49 82 68 C87 82 86 98 74 114" stroke-width="2.45"/>
-
-        <!-- Evenly spaced stitches, angled across each seam. -->
-        <g stroke-width="1.85">
-          <!-- left seam -->
-          <path d="M28 16 l8 -5"/><path d="M33 23 l8 -4"/><path d="M37 31 l8 -3"/>
-          <path d="M40 40 l8 -2"/><path d="M41 49 l8 0"/><path d="M40 58 l8 2"/>
-          <path d="M38 67 l8 3"/><path d="M36 76 l8 4"/><path d="M36 86 l8 5"/>
-          <path d="M38 96 l8 5"/><path d="M42 105 l8 4"/>
-
-          <!-- right seam -->
-          <path d="M92 16 l-8 -5"/><path d="M87 23 l-8 -4"/><path d="M83 31 l-8 -3"/>
-          <path d="M80 40 l-8 -2"/><path d="M79 49 l-8 0"/><path d="M80 58 l-8 2"/>
-          <path d="M82 67 l-8 3"/><path d="M84 76 l-8 4"/><path d="M84 86 l-8 5"/>
-          <path d="M82 96 l-8 5"/><path d="M78 105 l-8 4"/>
+      <circle cx="50" cy="50" r="46" fill="url(#ballShade)" stroke="#ffffff" stroke-opacity=".48" stroke-width="1"/>
+      <g clip-path="url(#ballClip)" fill="none" stroke="#b52b35" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Two opposing curved seams: the visible front projection of a baseball's figure-eight stitch line. -->
+        <path d="M18 7 C36 19 39 34 31 50 C23 67 28 82 45 96" stroke-width="2.15"/>
+        <path d="M82 7 C64 19 61 34 69 50 C77 67 72 82 55 96" stroke-width="2.15"/>
+        <g stroke-width="1.55">
+          <!-- left seam stitches -->
+          <path d="M23 13 l7 -3"/><path d="M28 19 l7 -3"/><path d="M32 26 l7 -2"/><path d="M34 34 l7 0"/>
+          <path d="M34 42 l7 2"/><path d="M31 50 l7 4"/><path d="M29 58 l7 4"/><path d="M29 67 l7 4"/>
+          <path d="M32 76 l7 3"/><path d="M36 84 l7 2"/><path d="M41 91 l7 1"/>
+          <!-- right seam stitches -->
+          <path d="M77 13 l-7 -3"/><path d="M72 19 l-7 -3"/><path d="M68 26 l-7 -2"/><path d="M66 34 l-7 0"/>
+          <path d="M66 42 l-7 2"/><path d="M69 50 l-7 4"/><path d="M71 58 l-7 4"/><path d="M71 67 l-7 4"/>
+          <path d="M68 76 l-7 3"/><path d="M64 84 l-7 2"/><path d="M59 91 l-7 1"/>
         </g>
       </g>
     </svg>"""
