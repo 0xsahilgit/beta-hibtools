@@ -58,13 +58,8 @@ p, label, .stMarkdown { color:var(--text); }
     padding:.35rem 0 1.25rem; margin-bottom:1.8rem; border-bottom:1px solid var(--line);
 }
 .hibs-brand-lockup { display:flex; align-items:center; gap:.9rem; }
-.hibs-brand-mark {
-    width:2.1rem; height:2.1rem; border-radius:50%; position:relative;
-    background:#f6f3ea; box-shadow:0 0 0 1px rgba(255,255,255,.22), inset -5px -7px 12px rgba(0,0,0,.10);
-}
-.hibs-brand-mark:before,.hibs-brand-mark:after { content:""; position:absolute; width:1.05rem; height:1.8rem; top:.14rem; border:2px solid #b32e32; border-top-color:transparent; border-bottom-color:transparent; border-radius:50%; }
-.hibs-brand-mark:before { left:.19rem; transform:rotate(-12deg); }
-.hibs-brand-mark:after { right:.19rem; transform:rotate(12deg); }
+.hibs-brand-mark { width:2.1rem; height:2.1rem; flex:0 0 2.1rem; filter:drop-shadow(0 3px 8px rgba(0,0,0,.28)); }
+.hibs-brand-mark svg { display:block; width:100%; height:100%; }
 .hibs-brand-title { font-size:1.08rem; font-weight:700; letter-spacing:-.025em; }
 .hibs-brand-sub { margin-top:.16rem; color:var(--muted-2); font:500 .70rem/1.2 'JetBrains Mono',monospace; letter-spacing:.10em; text-transform:uppercase; }
 .hibs-date { color:var(--muted); font:500 .76rem/1.2 'JetBrains Mono',monospace; letter-spacing:.05em; white-space:nowrap; }
@@ -113,15 +108,9 @@ hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6r
 
 /* Authentication */
 .auth-wrap { min-height:57vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-top:2rem; }
-.auth-ball-stage { width:92px; height:92px; display:grid; place-items:center; margin:0 auto 1.55rem; perspective:600px; }
-.auth-ball {
-    width:72px; height:72px; position:relative; border-radius:50%; background:radial-gradient(circle at 34% 28%, #fff 0%, #f3f0e8 46%, #d8d3c9 100%);
-    box-shadow:0 16px 45px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.22); animation:spinball 3.8s linear infinite;
-}
-.auth-ball:before,.auth-ball:after { content:""; position:absolute; width:31px; height:58px; top:7px; border:2px solid #a8292e; border-top-color:transparent; border-bottom-color:transparent; border-radius:50%; }
-.auth-ball:before { left:7px; transform:rotate(-13deg); }
-.auth-ball:after { right:7px; transform:rotate(13deg); }
-@keyframes spinball { 0%{transform:rotateY(0deg) rotateZ(-6deg)} 50%{transform:rotateY(180deg) rotateZ(6deg)} 100%{transform:rotateY(360deg) rotateZ(-6deg)} }
+.auth-ball-stage { width:96px; height:96px; display:grid; place-items:center; margin:0 auto 1.55rem; perspective:700px; }
+.auth-baseball { width:76px; height:76px; display:block; filter:drop-shadow(0 16px 22px rgba(0,0,0,.45)); animation:spinball 4.2s linear infinite; transform-style:preserve-3d; }
+@keyframes spinball { 0%{transform:rotateY(0deg) rotateZ(-5deg)} 50%{transform:rotateY(180deg) rotateZ(5deg)} 100%{transform:rotateY(360deg) rotateZ(-5deg)} }
 .auth-eyebrow { color:var(--accent); font:600 .67rem/1.2 'JetBrains Mono',monospace; letter-spacing:.16em; text-transform:uppercase; }
 .auth-title { margin-top:.55rem; font-size:2rem; font-weight:680; letter-spacing:-.045em; }
 .auth-copy { color:var(--muted); font-size:.86rem; margin:.45rem auto 1.55rem; max-width:340px; line-height:1.55; }
@@ -137,6 +126,31 @@ hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6r
 """, unsafe_allow_html=True)
 
 
+def baseball_svg(css_class="", aria_label="Baseball"):
+    """Inline baseball SVG with curved seams and individual stitches."""
+    cls = f' class="{css_class}"' if css_class else ""
+    return f"""<svg{cls} viewBox="0 0 100 100" role="img" aria-label="{aria_label}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="ballShade" cx="34%" cy="27%" r="72%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="58%" stop-color="#f2efe7"/>
+          <stop offset="100%" stop-color="#d5d0c6"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="url(#ballShade)" stroke="#ffffff" stroke-opacity=".45" stroke-width="1"/>
+      <g fill="none" stroke="#b92832" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M30 9 C19 26,19 41,31 52 C42 62,41 77,29 91" stroke-width="2.35"/>
+        <path d="M70 9 C81 26,81 41,69 52 C58 62,59 77,71 91" stroke-width="2.35"/>
+        <g stroke-width="1.7">
+          <path d="M27 17 l7 3"/><path d="M23 25 l8 3"/><path d="M21 34 l8 2"/><path d="M22 43 l8 -1"/>
+          <path d="M27 51 l7 -4"/><path d="M33 59 l7 -4"/><path d="M35 68 l7 1"/><path d="M34 78 l7 3"/><path d="M30 86 l7 4"/>
+          <path d="M73 17 l-7 3"/><path d="M77 25 l-8 3"/><path d="M79 34 l-8 2"/><path d="M78 43 l-8 -1"/>
+          <path d="M73 51 l-7 -4"/><path d="M67 59 l-7 -4"/><path d="M65 68 l-7 1"/><path d="M66 78 l-7 3"/><path d="M70 86 l-7 4"/>
+        </g>
+      </g>
+    </svg>"""
+
+
 def require_password():
     """Block the app until the shared password is entered."""
     if st.session_state.get("authenticated", False):
@@ -144,9 +158,9 @@ def require_password():
 
     left, center, right = st.columns([1.15, 1, 1.15])
     with center:
-        st.markdown("""
+        st.markdown(f"""
         <div class="auth-wrap">
-            <div class="auth-ball-stage"><div class="auth-ball"></div></div>
+            <div class="auth-ball-stage">{baseball_svg("auth-baseball")}</div>
             <div class="auth-eyebrow">Private Analytics System</div>
             <div class="auth-title">Hib's Batter Data Tool</div>
             <div class="auth-copy">Secure access to the MLB matchup, batted-ball, weather, pitch-mix, and spray-chart workspace.</div>
@@ -551,7 +565,7 @@ st.markdown(
     f"""
     <div class="hibs-masthead">
         <div class="hibs-brand-lockup">
-            <div class="hibs-brand-mark"></div>
+            <div class="hibs-brand-mark">{baseball_svg()}</div>
             <div>
                 <div class="hibs-brand-title">Hib's Batter Data Tool</div>
                 <div class="hibs-brand-sub">MLB Matchup Intelligence</div>
@@ -566,18 +580,13 @@ st.markdown(
 
 def section_header(kicker, title, note=None):
     note_html = f'<div class="hibs-section-note">{note}</div>' if note else ''
-    st.markdown(
-        f"""
-        <div class="hibs-section">
-            <div class="hibs-section-kicker">{kicker}</div>
-            <div>
-                <div class="hibs-section-title">{title}</div>
-                {note_html}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    html = (
+        f'<div class="hibs-section">'
+        f'<div class="hibs-section-kicker">{kicker}</div>'
+        f'<div><div class="hibs-section-title">{title}</div>{note_html}</div>'
+        f'</div>'
     )
+    st.markdown(html, unsafe_allow_html=True)
 
 
 # =========================
