@@ -17,7 +17,124 @@ from pathlib import Path
 from difflib import get_close_matches
 
 # --- CONFIG ---
-st.set_page_config(page_title="Hib's Batter Data Tool", layout="wide")
+st.set_page_config(page_title="Hib's Batter Data Tool", page_icon="⚾", layout="wide", initial_sidebar_state="collapsed")
+
+# Global visual system. The application remains native Streamlit/Python; this layer
+# deliberately suppresses the stock Streamlit visual language.
+st.markdown(r"""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root {
+    --bg: #070a0e;
+    --panel: #0d1218;
+    --panel-2: #10161d;
+    --line: rgba(255,255,255,.085);
+    --line-strong: rgba(255,255,255,.15);
+    --text: #f4f7fa;
+    --muted: #8995a3;
+    --muted-2: #66717d;
+    --accent: #d9ff43;
+    --accent-soft: rgba(217,255,67,.10);
+}
+
+html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+.stApp { background: var(--bg); color: var(--text); }
+[data-testid="stAppViewContainer"] {
+    background:
+        radial-gradient(circle at 76% -15%, rgba(217,255,67,.055), transparent 26rem),
+        linear-gradient(180deg, #080b0f 0%, #070a0e 100%);
+}
+[data-testid="stHeader"] { background: rgba(7,10,14,.72); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,.035); }
+[data-testid="stToolbar"], #MainMenu, footer, [data-testid="stStatusWidget"], [data-testid="stDecoration"] { display:none !important; }
+.block-container { max-width: 1440px; padding: 2.35rem 2.6rem 5rem; }
+
+h1,h2,h3,h4,h5,h6 { font-family:'Inter',sans-serif; color:var(--text); letter-spacing:-.035em; }
+p, label, .stMarkdown { color:var(--text); }
+
+/* App masthead */
+.hibs-masthead {
+    display:flex; align-items:flex-end; justify-content:space-between; gap:2rem;
+    padding:.35rem 0 1.25rem; margin-bottom:1.8rem; border-bottom:1px solid var(--line);
+}
+.hibs-brand-lockup { display:flex; align-items:center; gap:.9rem; }
+.hibs-brand-mark {
+    width:2.1rem; height:2.1rem; border-radius:50%; position:relative;
+    background:#f6f3ea; box-shadow:0 0 0 1px rgba(255,255,255,.22), inset -5px -7px 12px rgba(0,0,0,.10);
+}
+.hibs-brand-mark:before,.hibs-brand-mark:after { content:""; position:absolute; width:1.05rem; height:1.8rem; top:.14rem; border:2px solid #b32e32; border-top-color:transparent; border-bottom-color:transparent; border-radius:50%; }
+.hibs-brand-mark:before { left:.19rem; transform:rotate(-12deg); }
+.hibs-brand-mark:after { right:.19rem; transform:rotate(12deg); }
+.hibs-brand-title { font-size:1.08rem; font-weight:700; letter-spacing:-.025em; }
+.hibs-brand-sub { margin-top:.16rem; color:var(--muted-2); font:500 .70rem/1.2 'JetBrains Mono',monospace; letter-spacing:.10em; text-transform:uppercase; }
+.hibs-date { color:var(--muted); font:500 .76rem/1.2 'JetBrains Mono',monospace; letter-spacing:.05em; white-space:nowrap; }
+
+/* Section system */
+.hibs-section { display:grid; grid-template-columns: 140px 1fr; gap:1rem; align-items:start; margin:3.0rem 0 1.15rem; padding-top:1.25rem; border-top:1px solid var(--line); }
+.hibs-section-kicker { color:var(--accent); font:600 .68rem/1.25 'JetBrains Mono',monospace; letter-spacing:.13em; text-transform:uppercase; padding-top:.2rem; }
+.hibs-section-title { font-size:1.44rem; font-weight:650; line-height:1.15; letter-spacing:-.035em; }
+.hibs-section-note { color:var(--muted); margin-top:.35rem; font-size:.86rem; }
+
+/* Native controls, made flatter and denser */
+.stSelectbox label, .stNumberInput label, .stTextInput label { color:var(--muted)!important; font-size:.73rem!important; font-weight:600!important; letter-spacing:.035em!important; }
+div[data-baseweb="select"] > div, div[data-testid="stNumberInput"] input, div[data-testid="stTextInput"] input {
+    background:#0c1117!important; border:1px solid var(--line-strong)!important; border-radius:6px!important; color:var(--text)!important; box-shadow:none!important; min-height:2.7rem;
+}
+div[data-baseweb="select"] > div:hover, div[data-testid="stNumberInput"] input:hover, div[data-testid="stTextInput"] input:hover { border-color:rgba(255,255,255,.26)!important; }
+div[data-baseweb="select"] > div:focus-within, div[data-testid="stNumberInput"] input:focus, div[data-testid="stTextInput"] input:focus { border-color:var(--accent)!important; box-shadow:0 0 0 2px rgba(217,255,67,.08)!important; }
+
+.stButton > button {
+    min-height:2.72rem; border-radius:6px!important; border:1px solid var(--line-strong)!important; background:#11171e!important; color:#f7f9fb!important; font-weight:650!important; letter-spacing:-.01em; box-shadow:none!important; transition:transform .14s ease,border-color .14s ease,background .14s ease;
+}
+.stButton > button:hover { transform:translateY(-1px); border-color:rgba(217,255,67,.55)!important; background:#151c23!important; color:white!important; }
+.stButton > button:active { transform:translateY(0); }
+
+/* Expanders become technical disclosure panels */
+[data-testid="stExpander"] { background:var(--panel)!important; border:1px solid var(--line)!important; border-radius:7px!important; box-shadow:none!important; overflow:hidden; }
+[data-testid="stExpander"] summary { padding:.82rem 1rem!important; font-size:.86rem!important; font-weight:600!important; }
+[data-testid="stExpander"] summary:hover { background:rgba(255,255,255,.018); }
+[data-testid="stExpanderDetails"] { border-top:1px solid var(--line); padding-top:.45rem; }
+
+/* Tables: remove the floating-widget feel */
+[data-testid="stDataFrame"] { background:var(--panel)!important; border:1px solid var(--line)!important; border-radius:7px!important; overflow:hidden; box-shadow:none!important; }
+[data-testid="stDataFrame"] * { font-family:'Inter',sans-serif; }
+
+/* Metrics */
+[data-testid="stMetric"] { background:var(--panel)!important; border:1px solid var(--line)!important; border-radius:7px!important; padding:.95rem 1rem!important; }
+[data-testid="stMetricLabel"] { color:var(--muted)!important; font-size:.72rem!important; }
+[data-testid="stMetricValue"] { font-family:'JetBrains Mono',monospace!important; font-size:1.4rem!important; letter-spacing:-.04em; }
+
+/* Status messages */
+[data-testid="stAlert"] { border-radius:6px!important; border-width:1px!important; background:rgba(255,255,255,.025)!important; }
+
+/* Dividers / progress */
+hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6rem 0!important; }
+[data-testid="stProgress"] > div > div > div { background:var(--accent)!important; }
+
+/* Authentication */
+.auth-wrap { min-height:57vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-top:2rem; }
+.auth-ball-stage { width:92px; height:92px; display:grid; place-items:center; margin:0 auto 1.55rem; perspective:600px; }
+.auth-ball {
+    width:72px; height:72px; position:relative; border-radius:50%; background:radial-gradient(circle at 34% 28%, #fff 0%, #f3f0e8 46%, #d8d3c9 100%);
+    box-shadow:0 16px 45px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.22); animation:spinball 3.8s linear infinite;
+}
+.auth-ball:before,.auth-ball:after { content:""; position:absolute; width:31px; height:58px; top:7px; border:2px solid #a8292e; border-top-color:transparent; border-bottom-color:transparent; border-radius:50%; }
+.auth-ball:before { left:7px; transform:rotate(-13deg); }
+.auth-ball:after { right:7px; transform:rotate(13deg); }
+@keyframes spinball { 0%{transform:rotateY(0deg) rotateZ(-6deg)} 50%{transform:rotateY(180deg) rotateZ(6deg)} 100%{transform:rotateY(360deg) rotateZ(-6deg)} }
+.auth-eyebrow { color:var(--accent); font:600 .67rem/1.2 'JetBrains Mono',monospace; letter-spacing:.16em; text-transform:uppercase; }
+.auth-title { margin-top:.55rem; font-size:2rem; font-weight:680; letter-spacing:-.045em; }
+.auth-copy { color:var(--muted); font-size:.86rem; margin:.45rem auto 1.55rem; max-width:340px; line-height:1.55; }
+.auth-rule { width:48px; height:1px; background:var(--line-strong); margin:0 auto 1rem; }
+.auth-footer { color:var(--muted-2); font:500 .65rem/1.4 'JetBrains Mono',monospace; letter-spacing:.08em; text-transform:uppercase; margin-top:.7rem; }
+
+@media (max-width: 800px) {
+    .block-container { padding:1.5rem 1rem 4rem; }
+    .hibs-masthead { align-items:flex-start; flex-direction:column; gap:.7rem; }
+    .hibs-section { grid-template-columns:1fr; gap:.35rem; }
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 def require_password():
@@ -25,25 +142,40 @@ def require_password():
     if st.session_state.get("authenticated", False):
         return
 
-    st.title("⚾ Hib's Batter Data Tool")
-    entered_password = st.text_input(
-        "Enter password",
-        type="password",
-        key="password_input",
-    )
+    left, center, right = st.columns([1.15, 1, 1.15])
+    with center:
+        st.markdown("""
+        <div class="auth-wrap">
+            <div class="auth-ball-stage"><div class="auth-ball"></div></div>
+            <div class="auth-eyebrow">Private Analytics System</div>
+            <div class="auth-title">Hib's Batter Data Tool</div>
+            <div class="auth-copy">Secure access to the MLB matchup, batted-ball, weather, pitch-mix, and spray-chart workspace.</div>
+            <div class="auth-rule"></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    if st.button("Log in", use_container_width=True):
-        try:
-            correct_password = str(st.secrets["app_password"])
-        except KeyError:
-            st.error('Missing Streamlit secret: app_password')
-            st.stop()
+        entered_password = st.text_input(
+            "Password",
+            type="password",
+            key="password_input",
+            placeholder="Enter access key",
+            label_visibility="collapsed",
+        )
 
-        if hmac.compare_digest(entered_password, correct_password):
-            st.session_state["authenticated"] = True
-            st.rerun()
-        else:
-            st.error("Incorrect password.")
+        if st.button("ENTER WORKSPACE", use_container_width=True):
+            try:
+                correct_password = str(st.secrets["app_password"])
+            except KeyError:
+                st.error('Missing Streamlit secret: app_password')
+                st.stop()
+
+            if hmac.compare_digest(entered_password, correct_password):
+                st.session_state["authenticated"] = True
+                st.rerun()
+            else:
+                st.error("Incorrect password.")
+
+        st.markdown('<div class="auth-footer">Authenticated session required</div>', unsafe_allow_html=True)
 
     st.stop()
 
@@ -412,113 +544,20 @@ def get_today_matchups():
 # --- UI ---
 # --- UI ---
 
-# Clean single-page presentation. This intentionally changes layout only;
-# all existing data, calculations, and feature behavior remain the same.
-st.markdown("""
-<style>
-    .block-container {
-        max-width: 1320px;
-        padding-top: 2.2rem;
-        padding-bottom: 4rem;
-    }
-
-    h1, h2, h3 {
-        letter-spacing: -0.025em;
-    }
-
-    [data-testid="stAppViewContainer"] {
-        background: #0b0f14;
-    }
-
-    [data-testid="stHeader"] {
-        background: rgba(11, 15, 20, 0.92);
-    }
-
-    .hibs-hero {
-        padding: 0.25rem 0 1.35rem 0;
-        border-bottom: 1px solid rgba(255,255,255,0.10);
-        margin-bottom: 1.6rem;
-    }
-
-    .hibs-hero-title {
-        font-size: 2.15rem;
-        font-weight: 760;
-        line-height: 1.05;
-        margin: 0;
-    }
-
-    .hibs-hero-subtitle {
-        margin-top: 0.45rem;
-        color: rgba(255,255,255,0.62);
-        font-size: 0.95rem;
-    }
-
-    .hibs-section {
-        margin-top: 2.15rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .hibs-section-kicker {
-        color: rgba(255,255,255,0.50);
-        font-size: 0.76rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        margin-bottom: 0.28rem;
-    }
-
-    .hibs-section-title {
-        font-size: 1.45rem;
-        font-weight: 720;
-        line-height: 1.2;
-        margin: 0;
-    }
-
-    .hibs-section-note {
-        color: rgba(255,255,255,0.56);
-        margin-top: 0.35rem;
-        font-size: 0.9rem;
-    }
-
-    [data-testid="stExpander"] {
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 12px;
-        overflow: hidden;
-        background: rgba(255,255,255,0.025);
-    }
-
-    [data-testid="stDataFrame"] {
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .stButton > button {
-        border-radius: 10px;
-        min-height: 2.75rem;
-        font-weight: 650;
-    }
-
-    div[data-baseweb="select"] > div,
-    div[data-testid="stNumberInput"] input {
-        border-radius: 9px;
-    }
-
-    hr {
-        border-color: rgba(255,255,255,0.09);
-        margin: 2.25rem 0;
-    }
-</style>
-""", unsafe_allow_html=True)
-
+# Single-page dashboard shell. All calculations and data behavior below are unchanged.
 matchups, slate_date_iso, slate_date_label = get_today_matchups()
 
-# Replace the default title with a compact dashboard header.
 st.markdown(
     f"""
-    <div class="hibs-hero">
-        <div class="hibs-hero-title">⚾ Hib's Batter Data Tool</div>
-        <div class="hibs-hero-subtitle">{datetime.strptime(slate_date_iso, '%Y-%m-%d').strftime('%A, %B %d').replace(' 0', ' ')} MLB slate</div>
+    <div class="hibs-masthead">
+        <div class="hibs-brand-lockup">
+            <div class="hibs-brand-mark"></div>
+            <div>
+                <div class="hibs-brand-title">Hib's Batter Data Tool</div>
+                <div class="hibs-brand-sub">MLB Matchup Intelligence</div>
+            </div>
+        </div>
+        <div class="hibs-date">{datetime.strptime(slate_date_iso, '%Y-%m-%d').strftime('%A · %B %d, %Y').replace(' 0', ' ')}</div>
     </div>
     """,
     unsafe_allow_html=True,
@@ -531,8 +570,10 @@ def section_header(kicker, title, note=None):
         f"""
         <div class="hibs-section">
             <div class="hibs-section-kicker">{kicker}</div>
-            <div class="hibs-section-title">{title}</div>
-            {note_html}
+            <div>
+                <div class="hibs-section-title">{title}</div>
+                {note_html}
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
