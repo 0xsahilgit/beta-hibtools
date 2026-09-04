@@ -185,9 +185,9 @@ hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6r
 /* Authentication */
 .auth-wrap { min-height:57vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-top:2rem; }
 .auth-ball-stage { width:108px; height:108px; display:grid; place-items:center; margin:0 auto 1.55rem; perspective:700px; position:relative; isolation:isolate; }
-.auth-ball-stage::before { content:""; position:absolute; width:86px; height:86px; border-radius:50%; z-index:-1; background:radial-gradient(circle, rgba(102,157,255,.20) 0%, rgba(72,124,220,.10) 42%, rgba(72,124,220,0) 72%); filter:blur(10px); animation:ballGlow 4.6s ease-in-out infinite; }
-.auth-baseball { width:78px; height:78px; display:block; filter:drop-shadow(0 16px 22px rgba(0,0,0,.45)) drop-shadow(0 0 7px rgba(110,164,255,.12)); animation:spinball 4.2s linear infinite; transform-style:preserve-3d; }
-@keyframes ballGlow { 0%,100%{ transform:scale(.94); opacity:.60 } 50%{ transform:scale(1.10); opacity:1 } }
+.auth-ball-stage::before { content:""; position:absolute; width:112px; height:112px; border-radius:50%; z-index:-1; background:radial-gradient(circle, rgba(217,255,67,.42) 0%, rgba(217,255,67,.22) 34%, rgba(217,255,67,.09) 58%, rgba(217,255,67,0) 78%); filter:blur(14px); animation:ballGlow 4.6s ease-in-out infinite; }
+.auth-baseball { width:78px; height:78px; display:block; filter:drop-shadow(0 16px 22px rgba(0,0,0,.45)) drop-shadow(0 0 10px rgba(217,255,67,.20)); animation:spinball 4.2s linear infinite; transform-style:preserve-3d; }
+@keyframes ballGlow { 0%,100%{ transform:scale(.92); opacity:.72 } 50%{ transform:scale(1.16); opacity:1 } }
 @keyframes spinball { 0%{transform:rotateY(0deg) rotateZ(-5deg)} 50%{transform:rotateY(180deg) rotateZ(5deg)} 100%{transform:rotateY(360deg) rotateZ(-5deg)} }
 .auth-eyebrow { color:var(--accent); font:600 .67rem/1.2 'JetBrains Mono',monospace; letter-spacing:.16em; text-transform:uppercase; }
 .auth-title { margin-top:.55rem; font-size:2rem; font-weight:680; letter-spacing:-.045em; }
@@ -207,32 +207,31 @@ hr { border:0!important; border-top:1px solid var(--line)!important; margin:2.6r
 def baseball_svg(css_class="", aria_label="Baseball"):
     """Inline baseball SVG with realistic opposing seam arcs and angled stitches."""
     cls = f' class="{css_class}"' if css_class else ""
-    return f"""<svg{cls} viewBox="0 0 100 100" role="img" aria-label="{aria_label}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="ballShade" cx="31%" cy="24%" r="78%">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="56%" stop-color="#f4f1e9"/>
-          <stop offset="100%" stop-color="#d1cbc0"/>
-        </radialGradient>
-        <clipPath id="ballClip"><circle cx="50" cy="50" r="46"/></clipPath>
-      </defs>
-      <circle cx="50" cy="50" r="46" fill="url(#ballShade)" stroke="#ffffff" stroke-opacity=".48" stroke-width="1"/>
-      <g clip-path="url(#ballClip)" fill="none" stroke="#b52b35" stroke-linecap="round" stroke-linejoin="round">
-        <!-- Two opposing curved seams: the visible front projection of a baseball's figure-eight stitch line. -->
-        <path d="M18 7 C36 19 39 34 31 50 C23 67 28 82 45 96" stroke-width="2.15"/>
-        <path d="M82 7 C64 19 61 34 69 50 C77 67 72 82 55 96" stroke-width="2.15"/>
-        <g stroke-width="1.55">
-          <!-- left seam stitches -->
-          <path d="M23 13 l7 -3"/><path d="M28 19 l7 -3"/><path d="M32 26 l7 -2"/><path d="M34 34 l7 0"/>
-          <path d="M34 42 l7 2"/><path d="M31 50 l7 4"/><path d="M29 58 l7 4"/><path d="M29 67 l7 4"/>
-          <path d="M32 76 l7 3"/><path d="M36 84 l7 2"/><path d="M41 91 l7 1"/>
-          <!-- right seam stitches -->
-          <path d="M77 13 l-7 -3"/><path d="M72 19 l-7 -3"/><path d="M68 26 l-7 -2"/><path d="M66 34 l-7 0"/>
-          <path d="M66 42 l-7 2"/><path d="M69 50 l-7 4"/><path d="M71 58 l-7 4"/><path d="M71 67 l-7 4"/>
-          <path d="M68 76 l-7 3"/><path d="M64 84 l-7 2"/><path d="M59 91 l-7 1"/>
-        </g>
-      </g>
-    </svg>"""
+    return (
+        f'<svg{cls} viewBox="0 0 100 100" role="img" aria-label="{aria_label}" xmlns="http://www.w3.org/2000/svg">'
+        '<defs>'
+        '<radialGradient id="ballShade" cx="31%" cy="24%" r="78%">'
+        '<stop offset="0%" stop-color="#ffffff"/>'
+        '<stop offset="56%" stop-color="#f4f1e9"/>'
+        '<stop offset="100%" stop-color="#d1cbc0"/>'
+        '</radialGradient>'
+        '<clipPath id="ballClip"><circle cx="50" cy="50" r="46"/></clipPath>'
+        '</defs>'
+        '<circle cx="50" cy="50" r="46" fill="url(#ballShade)" stroke="#ffffff" stroke-opacity=".48" stroke-width="1"/>'
+        '<g clip-path="url(#ballClip)" fill="none" stroke="#b52b35" stroke-linecap="round" stroke-linejoin="round">'
+        '<path d="M18 7 C36 19 39 34 31 50 C23 67 28 82 45 96" stroke-width="2.15"/>'
+        '<path d="M82 7 C64 19 61 34 69 50 C77 67 72 82 55 96" stroke-width="2.15"/>'
+        '<g stroke-width="1.55">'
+        '<path d="M23 13 l7 -3"/><path d="M28 19 l7 -3"/><path d="M32 26 l7 -2"/><path d="M34 34 l7 0"/>'
+        '<path d="M34 42 l7 2"/><path d="M31 50 l7 4"/><path d="M29 58 l7 4"/><path d="M29 67 l7 4"/>'
+        '<path d="M32 76 l7 3"/><path d="M36 84 l7 2"/><path d="M41 91 l7 1"/>'
+        '<path d="M77 13 l-7 -3"/><path d="M72 19 l-7 -3"/><path d="M68 26 l-7 -2"/><path d="M66 34 l-7 0"/>'
+        '<path d="M66 42 l-7 2"/><path d="M69 50 l-7 4"/><path d="M71 58 l-7 4"/><path d="M71 67 l-7 4"/>'
+        '<path d="M68 76 l-7 3"/><path d="M64 84 l-7 2"/><path d="M59 91 l-7 1"/>'
+        '</g>'
+        '</g>'
+        '</svg>'
+    )
 
 
 def matchup_card_header(matchup):
@@ -249,15 +248,18 @@ def require_password():
 
     left, center, right = st.columns([1.15, 1, 1.15])
     with center:
-        st.markdown(f"""
-        <div class="auth-wrap">
-            <div class="auth-ball-stage">{baseball_svg("auth-baseball")}</div>
-            <div class="auth-eyebrow">Private Analytics System</div>
-            <div class="auth-title">Hib's Batter Data Tool</div>
-            <div class="auth-copy">Secure access to the MLB matchup, batted-ball, weather, pitch-mix, and spray-chart workspace.</div>
-            <div class="auth-rule"></div>
-        </div>
-        """, unsafe_allow_html=True)
+        auth_html = (
+            '<div class="auth-wrap">'
+            '<div class="auth-ball-stage">'
+            f'{baseball_svg("auth-baseball")}'
+            '</div>'
+            '<div class="auth-eyebrow">Private Analytics System</div>'
+            "<div class=\"auth-title\">Hib's Batter Data Tool</div>"
+            '<div class="auth-copy">Secure access to the MLB matchup, batted-ball, weather, pitch-mix, and spray-chart workspace.</div>'
+            '<div class="auth-rule"></div>'
+            '</div>'
+        )
+        st.markdown(auth_html, unsafe_allow_html=True)
 
         entered_password = st.text_input(
             "Password",
@@ -652,21 +654,24 @@ def get_today_matchups():
 # Single-page dashboard shell. All calculations and data behavior below are unchanged.
 matchups, slate_date_iso, slate_date_label = get_today_matchups()
 
-st.markdown(
-    f"""
-    <div class="hibs-masthead">
-        <div class="hibs-brand-lockup">
-            <div class="hibs-brand-mark">{baseball_svg()}</div>
-            <div>
-                <div class="hibs-brand-title">Hib's Batter Data Tool</div>
-                <div class="hibs-brand-sub">MLB Matchup Intelligence</div>
-            </div>
-        </div>
-        <div class="hibs-date">{datetime.strptime(slate_date_iso, '%Y-%m-%d').strftime('%A · %B %d, %Y').replace(' 0', ' ')}</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
+masthead_html = (
+    '<div class="hibs-masthead">'
+    '<div class="hibs-brand-lockup">'
+    '<div class="hibs-brand-mark">'
+    f'{baseball_svg()}'
+    '</div>'
+    '<div>'
+    "<div class=\"hibs-brand-title\">Hib's Batter Data Tool</div>"
+    '<div class="hibs-brand-sub">MLB Matchup Intelligence</div>'
+    '</div>'
+    '</div>'
+    '<div class="hibs-date">'
+    f'{datetime.strptime(slate_date_iso, "%Y-%m-%d").strftime("%A · %B %d, %Y").replace(" 0", " ")}'
+    '</div>'
+    '</div>'
 )
+st.markdown(masthead_html, unsafe_allow_html=True)
+
 
 
 def section_header(kicker, title, note=None):
